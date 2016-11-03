@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <AFNetworking.h>
 
 @interface ViewController ()
 
@@ -16,7 +17,38 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    self.view.backgroundColor = [UIColor redColor];
+    
+    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
+    
+    /*
+     AFNetworkReachabilityStatusUnknown          = -1,
+     AFNetworkReachabilityStatusNotReachable     = 0,
+     AFNetworkReachabilityStatusReachableViaWWAN = 1,
+     AFNetworkReachabilityStatusReachableViaWiFi = 2,
+     */
+    [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        
+        NSLog(@"%zd", status);
+        
+        if (status == AFNetworkReachabilityStatusNotReachable) {
+            
+            NSLog(@"没有网络");
+        } else if (status == AFNetworkReachabilityStatusReachableViaWiFi) {
+            
+            NSLog(@"wifi环境");
+        } else if (status == AFNetworkReachabilityStatusReachableViaWWAN) {
+            
+            NSLog(@"移动数据流量");
+        } else {
+            
+            NSLog(@"不可知的网络环境");
+        }
+        
+    }];
+    
+    [manager startMonitoring];
 }
 
 
